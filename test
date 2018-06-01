@@ -1,0 +1,54 @@
+"""
+    #version 330 core
+    layout (location = 0) in vec3 aPos; // the position variable has attribute position 0
+    layout (location = 1) in vec3 aNormal;
+
+    out vec4 vertexColor;
+    out vec3 Normal;
+    out vec3 FragPos;
+
+    in vec3 positionIn;
+
+    uniform mat4 model;
+    uniform mat4 view;
+    uniform mat4 projection;
+
+    uniform mat4 transformationMatrix;
+
+    void main()
+    {
+	    gl_Position = transformationMatrix * vec4(positionIn, 1.0);
+
+        Normal = aNormal;
+        FragPos = positionIn;
+        vertexColor = vec4(0.5, 0.0, 0.0, 1.0); // set the output variable to a dark-red color
+    }
+    """,
+    """
+    #version 330 core
+    out vec4 FragColor;
+
+    uniform vec4 colour;
+    uniform vec4 lightColour;
+    uniform vec3 lightPosition;
+
+    in vec3 Normal;
+    in vec3 FragPos;
+    in vec4 vertexColor; // the input variable from the vertex shader (same name and same type)  
+
+    void main()
+    {
+        float ambientStrength = 0.1;
+        vec4 ambient = ambientStrength * lightColour;
+
+        vec3 norm = normalize(Normal);
+        vec3 lightDir = normalize(lightPosition - FragPos);
+        float diff = max(dot(norm, lightDir), 0.0);
+
+        vec4 diffuse = diff * lightColour;
+
+        vec4 result = (ambient + diffuse) * colour;
+        result[3] = 1;
+        FragColor = result;
+    } 
+    """

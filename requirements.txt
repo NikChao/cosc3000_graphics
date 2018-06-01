@@ -1,0 +1,7 @@
+numpy
+PyOpenGL
+PyOpenGL_accelerate
+glfw
+Pillow
+imgui
+PIL
